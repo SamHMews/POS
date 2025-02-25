@@ -1,0 +1,86 @@
+import { useState } from "react";
+import { Button, Input } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Plus, Minus } from "lucide-react";
+
+const menu = {
+  "Breakfast": {
+    "Drinks": [
+      { name: "English Breakfast Tea", price: 4.00 },
+      { name: "Fresh Orange Juice", price: 5.00 },
+      { name: "Latte", price: 3.00 }
+    ],
+    "Food": [
+      { name: "Avocado Toast", price: 22.00 },
+      { name: "Full English Breakfast", price: 22.00 },
+      { name: "Pancakes & Berries", price: 19.00 },
+      { name: "Smoked Salmon Bagel", price: 15.00 }
+    ]
+  },
+  "Lunch & Dinner": {
+    "Drinks": [
+      { name: "Berry Smoothie", price: 7.00 },
+      { name: "Classic Mojito", price: 8.00 },
+      { name: "Elderflower Spritz", price: 9.00 },
+      { name: "Espresso Martini", price: 15.00 }
+    ],
+    "Food": [
+      { name: "BBQ Chicken Burger", price: 25.00 },
+      { name: "Caesar Salad", price: 17.00 },
+      { name: "Grilled Ribeye Steak", price: 32.00 },
+      { name: "Mushroom Tagliatelle", price: 17.00 },
+      { name: "Pan-Seared Salmon", price: 25.00 }
+    ]
+  }
+};
+
+export default function RestaurantPOS() {
+  const [accountID, setAccountID] = useState("");
+  const [foundAccountID, setFoundAccountID] = useState("");
+  const [order, setOrder] = useState({});
+
+  const searchAccount = () => {
+    setFoundAccountID(accountID); // Simulating account lookup
+  };
+
+  const updateQuantity = (itemName, delta) => {
+    setOrder(prev => {
+      const newQuantity = (prev[itemName] || 0) + delta;
+      if (newQuantity < 0) return prev;
+      return { ...prev, [itemName]: newQuantity };
+    });
+  };
+
+  return (
+    <div className="p-4 max-w-2xl mx-auto">
+      <h1 className="text-xl font-bold mb-4">Restaurant POS</h1>
+      <div className="flex gap-2 mb-4">
+        <Input value={accountID} onChange={e => setAccountID(e.target.value)} placeholder="Enter Account ID" />
+        <Button onClick={searchAccount}>Search</Button>
+      </div>
+      {foundAccountID && <p className="mb-4">Account Found: {foundAccountID}</p>}
+      <div className="space-y-4">
+        {Object.entries(menu).map(([category, subcategories]) => (
+          <div key={category}>
+            <h2 className="text-lg font-semibold">{category}</h2>
+            {Object.entries(subcategories).map(([subcat, items]) => (
+              <div key={subcat} className="pl-4">
+                <h3 className="font-medium">{subcat}</h3>
+                {items.map(({ name, price }) => (
+                  <Card key={name} className="p-2 flex justify-between items-center">
+                    <span>{name} (£{price.toFixed(2)})</span>
+                    <div className="flex items-center gap-2">
+                      <Button size="sm" variant="outline" onClick={() => updateQuantity(name, -1)}><Minus /></Button>
+                      <span>{order[name] || 0}</span>
+                      <Button size="sm" variant="outline" onClick={() => updateQuantity(name, 1)}><Plus /></Button>
+                    </div>
+                  </Card>
+                ))}
+              </div>
+            ))}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
