@@ -1,88 +1,110 @@
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Card, CardContent } from "@/components/ui/card";
-import { Plus, Minus } from "lucide-react";
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restaurant POS</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 p-6">
+    <div id="root"></div>
+    <script type="text/babel">
+        const { useState } = React;
 
-const menu = {
-  "Breakfast": {
-    "Drinks": [
-      { name: "English Breakfast Tea", price: 4.00 },
-      { name: "Fresh Orange Juice", price: 5.00 },
-      { name: "Latte", price: 3.00 }
-    ],
-    "Food": [
-      { name: "Avocado Toast", price: 22.00 },
-      { name: "Full English Breakfast", price: 22.00 },
-      { name: "Pancakes & Berries", price: 19.00 },
-      { name: "Smoked Salmon Bagel", price: 15.00 }
-    ]
-  },
-  "Lunch & Dinner": {
-    "Drinks": [
-      { name: "Berry Smoothie", price: 7.00 },
-      { name: "Classic Mojito", price: 8.00 },
-      { name: "Elderflower Spritz", price: 9.00 },
-      { name: "Espresso Martini", price: 15.00 }
-    ],
-    "Food": [
-      { name: "BBQ Chicken Burger", price: 25.00 },
-      { name: "Caesar Salad", price: 17.00 },
-      { name: "Grilled Ribeye Steak", price: 32.00 },
-      { name: "Mushroom Tagliatelle", price: 17.00 },
-      { name: "Pan-Seared Salmon", price: 25.00 }
-    ]
-  }
-};
+        const menu = {
+            "Breakfast": {
+                "Drinks": [
+                    { name: "English Breakfast Tea", price: 4.00 },
+                    { name: "Fresh Orange Juice", price: 5.00 },
+                    { name: "Latte", price: 3.00 }
+                ],
+                "Food": [
+                    { name: "Avocado Toast", price: 22.00 },
+                    { name: "Full English Breakfast", price: 22.00 },
+                    { name: "Pancakes & Berries", price: 19.00 },
+                    { name: "Smoked Salmon Bagel", price: 15.00 }
+                ]
+            },
+            "Lunch & Dinner": {
+                "Drinks": [
+                    { name: "Berry Smoothie", price: 7.00 },
+                    { name: "Classic Mojito", price: 8.00 },
+                    { name: "Elderflower Spritz", price: 9.00 },
+                    { name: "Espresso Martini", price: 15.00 }
+                ],
+                "Food": [
+                    { name: "BBQ Chicken Burger", price: 25.00 },
+                    { name: "Caesar Salad", price: 17.00 },
+                    { name: "Grilled Ribeye Steak", price: 32.00 },
+                    { name: "Mushroom Tagliatelle", price: 17.00 },
+                    { name: "Pan-Seared Salmon", price: 25.00 }
+                ]
+            }
+        };
 
-export default function RestaurantPOS() {
-  const [accountID, setAccountID] = useState("");
-  const [foundAccountID, setFoundAccountID] = useState("");
-  const [order, setOrder] = useState({});
+        function RestaurantPOS() {
+            const [accountID, setAccountID] = useState("");
+            const [foundAccountID, setFoundAccountID] = useState("");
+            const [order, setOrder] = useState({});
 
-  const searchAccount = () => {
-    setFoundAccountID(accountID); // Simulating account lookup
-  };
+            const searchAccount = () => {
+                setFoundAccountID(accountID);
+            };
 
-  const updateQuantity = (itemName, delta) => {
-    setOrder(prev => {
-      const newQuantity = (prev[itemName] || 0) + delta;
-      if (newQuantity < 0) return prev;
-      return { ...prev, [itemName]: newQuantity };
-    });
-  };
+            const updateQuantity = (itemName, delta) => {
+                setOrder(prev => {
+                    const newQuantity = (prev[itemName] || 0) + delta;
+                    if (newQuantity < 0) return prev;
+                    return { ...prev, [itemName]: newQuantity };
+                });
+            };
 
-  return (
-    <div className="p-6 max-w-lg mx-auto bg-white shadow-lg rounded-lg flex flex-col items-center">
-      <h1 className="text-3xl font-bold mb-6 text-center">Restaurant POS</h1>
-      <div className="w-full flex flex-col gap-4 mb-6">
-        <Input className="p-3 border rounded-md w-full" value={accountID} onChange={e => setAccountID(e.target.value)} placeholder="Enter Account ID" />
-        <Button className="bg-blue-500 text-white p-3 rounded-md w-full" onClick={searchAccount}>Search</Button>
-      </div>
-      {foundAccountID && <p className="mb-6 text-center text-gray-700 text-lg font-semibold">Account Found: {foundAccountID}</p>}
-      <div className="w-full space-y-6">
-        {Object.entries(menu).map(([category, subcategories]) => (
-          <div key={category} className="w-full">
-            <h2 className="text-xl font-semibold mb-3 text-gray-800 border-b pb-2">{category}</h2>
-            {Object.entries(subcategories).map(([subcat, items]) => (
-              <div key={subcat} className="pl-4 w-full">
-                <h3 className="font-medium mb-2 text-gray-700 text-lg">{subcat}</h3>
-                {items.map(({ name, price }) => (
-                  <Card key={name} className="p-4 flex justify-between items-center mb-3 border rounded-md shadow-sm w-full">
-                    <span className="text-gray-900 font-medium">{name} (£{price.toFixed(2)})</span>
-                    <div className="flex items-center gap-2">
-                      <Button size="sm" variant="outline" className="border p-2 rounded-md bg-gray-200" onClick={() => updateQuantity(name, -1)}><Minus /></Button>
-                      <span className="text-lg font-semibold">{order[name] || 0}</span>
-                      <Button size="sm" variant="outline" className="border p-2 rounded-md bg-gray-200" onClick={() => updateQuantity(name, 1)}><Plus /></Button>
+            return (
+                <div className="p-6 max-w-lg mx-auto bg-white shadow-lg rounded-lg flex flex-col items-center">
+                    <h1 className="text-3xl font-bold mb-6 text-center">Restaurant POS</h1>
+                    <div className="w-full flex flex-col gap-4 mb-6">
+                        <input 
+                            className="p-3 border rounded-md w-full" 
+                            value={accountID} 
+                            onChange={e => setAccountID(e.target.value)} 
+                            placeholder="Enter Account ID" 
+                        />
+                        <button className="bg-blue-500 text-white p-3 rounded-md w-full" onClick={searchAccount}>
+                            Search
+                        </button>
                     </div>
-                  </Card>
-                ))}
-              </div>
-            ))}
-          </div>
-        ))}
-      </div>
-      <Button className="bg-blue-500 text-white p-4 rounded-md w-full mt-6">Place Order</Button>
-    </div>
-  );
-}
+                    {foundAccountID && <p className="mb-6 text-center text-gray-700 text-lg font-semibold">Account Found: {foundAccountID}</p>}
+                    <div className="w-full space-y-6">
+                        {Object.entries(menu).map(([category, subcategories]) => (
+                            <div key={category} className="w-full">
+                                <h2 className="text-xl font-semibold mb-3 text-gray-800 border-b pb-2">{category}</h2>
+                                {Object.entries(subcategories).map(([subcat, items]) => (
+                                    <div key={subcat} className="pl-4 w-full">
+                                        <h3 className="font-medium mb-2 text-gray-700 text-lg">{subcat}</h3>
+                                        {items.map(({ name, price }) => (
+                                            <div key={name} className="p-4 flex justify-between items-center mb-3 border rounded-md shadow-sm w-full">
+                                                <span className="text-gray-900 font-medium">{name} (£{price.toFixed(2)})</span>
+                                                <div className="flex items-center gap-2">
+                                                    <button className="border p-2 rounded-md bg-gray-200" onClick={() => updateQuantity(name, -1)}>-</button>
+                                                    <span className="text-lg font-semibold">{order[name] || 0}</span>
+                                                    <button className="border p-2 rounded-md bg-gray-200" onClick={() => updateQuantity(name, 1)}>+</button>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                ))}
+                            </div>
+                        ))}
+                    </div>
+                    <button className="bg-blue-500 text-white p-4 rounded-md w-full mt-6">Place Order</button>
+                </div>
+            );
+        }
+
+        ReactDOM.createRoot(document.getElementById("root")).render(<RestaurantPOS />);
+    </script>
+</body>
+</html>
