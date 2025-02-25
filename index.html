@@ -7,7 +7,9 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         .item-card { display: flex; justify-content: space-between; align-items: center; padding: 10px; border: 1px solid #ddd; border-radius: 5px; background: white; }
-        .qty-btn { padding: 5px 10px; border: 1px solid #ccc; background: #f3f3f3; cursor: pointer; }
+        .qty-btn { padding: 5px; width: 30px; border: 1px solid #ccc; background: #f3f3f3; cursor: pointer; text-align: center; }
+        .qty-container { display: flex; align-items: center; gap: 5px; }
+        .qty-display { width: 30px; text-align: center; font-weight: bold; }
     </style>
 </head>
 <body class="bg-gray-100 p-6">
@@ -89,9 +91,9 @@
                         itemDiv.className = "item-card";
                         itemDiv.innerHTML = `
                             <span>${name} (£${price.toFixed(2)})</span>
-                            <div>
+                            <div class="qty-container">
                                 <button class="qty-btn" onclick="updateQuantity('${name}', -1)">-</button>
-                                <span id="qty-${name}">0</span>
+                                <span id="qty-${name}" class="qty-display">0</span>
                                 <button class="qty-btn" onclick="updateQuantity('${name}', 1)">+</button>
                             </div>
                         `;
