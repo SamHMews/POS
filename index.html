@@ -6,23 +6,24 @@
     <title>Restaurant POS</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        .item-card { display: flex; justify-content: space-between; align-items: center; padding: 10px; border: 1px solid #ddd; border-radius: 5px; background: white; }
-        .qty-btn { padding: 5px; width: 30px; border: 1px solid #ccc; background: #f3f3f3; cursor: pointer; text-align: center; }
-        .qty-container { display: flex; align-items: center; gap: 5px; }
-        .qty-display { width: 30px; text-align: center; font-weight: bold; }
+        .item-card { display: flex; justify-content: space-between; align-items: center; padding: 20px; border: 1px solid #ddd; border-radius: 5px; background: white; margin-bottom: 20px; }
+        .qty-btn { padding: 8px; width: 40px; border: 1px solid #ccc; background: #f3f3f3; cursor: pointer; text-align: center; }
+        .qty-container { display: flex; align-items: center; gap: 15px; }
+        .qty-display { width: 40px; text-align: center; font-weight: bold; }
+        .grid-cols-3 > div { padding: 15px; }
     </style>
 </head>
-<body class="bg-gray-100 p-6">
-    <div class="max-w-4xl mx-auto bg-white p-6 shadow-lg rounded-lg">
-        <h1 class="text-2xl font-bold text-center mb-4">Restaurant POS</h1>
-        <input id="accountID" class="w-full p-2 border rounded mb-4" placeholder="Enter Account ID">
-        <button onclick="searchAccount()" class="w-full bg-blue-500 text-white p-2 rounded">Search</button>
-        <p id="accountFound" class="text-center mt-4 text-gray-700"></p>
+<body class="bg-gray-100 p-8">
+    <div class="max-w-5xl mx-auto bg-white p-8 shadow-lg rounded-lg">
+        <h1 class="text-3xl font-bold text-center mb-6">Restaurant POS</h1>
+        <input id="accountID" class="w-full p-3 border rounded mb-6" placeholder="Enter Account ID">
+        <button onclick="searchAccount()" class="w-full bg-blue-500 text-white p-3 rounded">Search</button>
+        <p id="accountFound" class="text-center mt-6 text-gray-700"></p>
         
-        <h2 class="text-xl font-semibold mt-6">Menu</h2>
-        <div id="menuItems" class="mt-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+        <h2 class="text-2xl font-semibold mt-8">Menu</h2>
+        <div id="menuItems" class="mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10"></div>
         
-        <button class="w-full bg-blue-500 text-white p-3 rounded mt-6">Place Order</button>
+        <button class="w-full bg-blue-500 text-white p-4 rounded mt-8">Place Order</button>
     </div>
 
     <script>
@@ -76,13 +77,13 @@
             
             Object.entries(menu).forEach(([category, subcategories]) => {
                 let categoryTitle = document.createElement('h3');
-                categoryTitle.className = "text-lg font-semibold mt-4 col-span-full";
+                categoryTitle.className = "text-xl font-semibold mt-6 col-span-full";
                 categoryTitle.innerText = category;
                 menuDiv.appendChild(categoryTitle);
                 
                 Object.entries(subcategories).forEach(([subcat, items]) => {
                     let subcatTitle = document.createElement('h4');
-                    subcatTitle.className = "text-md font-medium mt-2 text-gray-700 col-span-full";
+                    subcatTitle.className = "text-lg font-medium mt-4 text-gray-700 col-span-full";
                     subcatTitle.innerText = subcat;
                     menuDiv.appendChild(subcatTitle);
                     
