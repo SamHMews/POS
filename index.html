@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Button, Input } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { Plus, Minus } from "lucide-react";
 
@@ -62,12 +63,12 @@ export default function RestaurantPOS() {
       <div className="space-y-4">
         {Object.entries(menu).map(([category, subcategories]) => (
           <div key={category}>
-            <h2 className="text-lg font-semibold">{category}</h2>
+            <h2 className="text-lg font-semibold mb-2">{category}</h2>
             {Object.entries(subcategories).map(([subcat, items]) => (
               <div key={subcat} className="pl-4">
-                <h3 className="font-medium">{subcat}</h3>
+                <h3 className="font-medium mb-1">{subcat}</h3>
                 {items.map(({ name, price }) => (
-                  <Card key={name} className="p-2 flex justify-between items-center">
+                  <Card key={name} className="p-4 flex justify-between items-center mb-2">
                     <span>{name} (£{price.toFixed(2)})</span>
                     <div className="flex items-center gap-2">
                       <Button size="sm" variant="outline" onClick={() => updateQuantity(name, -1)}><Minus /></Button>
