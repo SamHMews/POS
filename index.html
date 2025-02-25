@@ -11,14 +11,14 @@
     </style>
 </head>
 <body class="bg-gray-100 p-6">
-    <div class="max-w-2xl mx-auto bg-white p-6 shadow-lg rounded-lg">
+    <div class="max-w-4xl mx-auto bg-white p-6 shadow-lg rounded-lg">
         <h1 class="text-2xl font-bold text-center mb-4">Restaurant POS</h1>
         <input id="accountID" class="w-full p-2 border rounded mb-4" placeholder="Enter Account ID">
         <button onclick="searchAccount()" class="w-full bg-blue-500 text-white p-2 rounded">Search</button>
         <p id="accountFound" class="text-center mt-4 text-gray-700"></p>
         
         <h2 class="text-xl font-semibold mt-6">Menu</h2>
-        <div id="menuItems" class="mt-4 space-y-4"></div>
+        <div id="menuItems" class="mt-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
         
         <button class="w-full bg-blue-500 text-white p-3 rounded mt-6">Place Order</button>
     </div>
@@ -36,6 +36,21 @@
                     { name: "Full English Breakfast", price: 22.00 },
                     { name: "Pancakes & Berries", price: 19.00 },
                     { name: "Smoked Salmon Bagel", price: 15.00 }
+                ]
+            },
+            "Lunch & Dinner": {
+                "Drinks": [
+                    { name: "Berry Smoothie", price: 7.00 },
+                    { name: "Classic Mojito", price: 8.00 },
+                    { name: "Elderflower Spritz", price: 9.00 },
+                    { name: "Espresso Martini", price: 15.00 }
+                ],
+                "Food": [
+                    { name: "BBQ Chicken Burger", price: 25.00 },
+                    { name: "Caesar Salad", price: 17.00 },
+                    { name: "Grilled Ribeye Steak", price: 32.00 },
+                    { name: "Mushroom Tagliatelle", price: 17.00 },
+                    { name: "Pan-Seared Salmon", price: 25.00 }
                 ]
             }
         };
@@ -59,13 +74,13 @@
             
             Object.entries(menu).forEach(([category, subcategories]) => {
                 let categoryTitle = document.createElement('h3');
-                categoryTitle.className = "text-lg font-semibold mt-4";
+                categoryTitle.className = "text-lg font-semibold mt-4 col-span-full";
                 categoryTitle.innerText = category;
                 menuDiv.appendChild(categoryTitle);
                 
                 Object.entries(subcategories).forEach(([subcat, items]) => {
                     let subcatTitle = document.createElement('h4');
-                    subcatTitle.className = "text-md font-medium mt-2 text-gray-700";
+                    subcatTitle.className = "text-md font-medium mt-2 text-gray-700 col-span-full";
                     subcatTitle.innerText = subcat;
                     menuDiv.appendChild(subcatTitle);
                     
