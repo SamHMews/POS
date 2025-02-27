@@ -1,3 +1,6 @@
+const proxyUrl = "https://cors-anywhere.herokuapp.com/";
+const API_BASE_URL = "https://api.mews-demo.com/api/connector/v1";
+
 const API_CONFIG = {
     clientToken: "E0D439EE522F44368DC78E1BFB03710C-D24FB11DBE31D4621C4817E028D9E1D",
     accessToken: "381F1DD27E44487699BAB27400AAF224-3FC59278EBB61547F7A4A5DB4587E16",
@@ -7,7 +10,6 @@ const API_CONFIG = {
 };
 
 let customerId = null;
-
 const productIds = {
     "English Breakfast Tea": "735463cc-f81c-4e55-911e-b28f00d86ef8",
     "Fresh Orange Juice": "484c50ae-877b-4088-ad3d-b28f00d81595",
@@ -34,9 +36,9 @@ async function searchCustomer() {
         return;
     }
     
-    const response = await fetch('https://api.mews-demo.com/api/connector/v1/customers/search', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+    const response = await fetch(proxyUrl + API_BASE_URL + "/customers/search", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
             ClientToken: API_CONFIG.clientToken,
             AccessToken: API_CONFIG.accessToken,
@@ -75,9 +77,9 @@ async function submitOrder() {
         return;
     }
     
-    const response = await fetch('https://api.mews-demo.com/api/connector/v1/orders/add', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+    const response = await fetch(proxyUrl + API_BASE_URL + "/orders/add", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
             ClientToken: API_CONFIG.clientToken,
             AccessToken: API_CONFIG.accessToken,
