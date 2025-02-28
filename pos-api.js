@@ -38,17 +38,18 @@ console.log("pos-api.js is loaded!");
 // Customer Search
 async function searchCustomer() {
     console.log("searchCustomer() function called!");
-    
+
     const name = document.getElementById('accountID').value;
     if (!name) {
         alert("Please enter a customer name.");
+        console.log("No customer name provided.");
         return;
     }
 
     console.log("Fetching customer details for:", name);
 
     try {
-        const response = await fetch(proxyUrl + API_BASE_URL + "/customers/search", {
+        const response = await fetch(API_BASE_URL + "/customers/search", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -61,15 +62,23 @@ async function searchCustomer() {
             })
         });
 
+        console.log("Raw Response:", response);
+
+        if (!response.ok) {
+            throw new Error(`HTTP Error! Status: ${response.status}`);
+        }
+
         const data = await response.json();
         console.log("Customer search response:", data);
 
         if (data.Customers && data.Customers.length > 0) {
             customerId = data.Customers[0].Id;
             document.getElementById('customerInfo').innerText = `Customer Found: ${data.Customers[0].FirstName} ${data.Customers[0].LastName} (ID: ${customerId})`;
+            console.log("Customer found:", data.Customers[0]);
         } else {
             customerId = null;
             document.getElementById('customerInfo').innerText = "No customer found";
+            console.log("No customer found.");
         }
     } catch (error) {
         console.error("Error in searchCustomer():", error);
