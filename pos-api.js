@@ -42,27 +42,17 @@ async function searchCustomer() {
     const name = document.getElementById('accountID').value;
     if (!name) {
         alert("Please enter a customer name.");
-        console.log("No customer name provided.");
         return;
     }
 
     console.log("Fetching customer details for:", name);
 
     try {
-        const response = await fetch("https://api.mews-demo.com/api/connector/v1/customers/search", {
+        const response = await fetch("https://pos-proxy.onrender.com/search-customer", { // Replace with your actual Render URL
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                ClientToken: API_CONFIG.clientToken,
-                AccessToken: API_CONFIG.accessToken,
-                Client: API_CONFIG.client,
-                Name: name,
-                ResourceId: null,
-                Extent: { Customers: true }
-            })
+            body: JSON.stringify({ name })
         });
-
-        console.log("Raw Response:", response);
 
         if (!response.ok) {
             throw new Error(`HTTP Error! Status: ${response.status}`);
@@ -84,7 +74,6 @@ async function searchCustomer() {
         console.error("Error in searchCustomer():", error);
     }
 }
-
 
 // Update item quantities
 function updateQuantity(item, delta) {
