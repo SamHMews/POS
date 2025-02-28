@@ -3,7 +3,18 @@ const cors = require('cors');
 const fetch = require('node-fetch');
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3000; // ✅ Use dynamic port
+
+app.use(cors());
+app.use(express.json());
+
+app.get('/', (req, res) => {
+    res.send('✅ POS Proxy Server is Running');
+});
+
+app.listen(PORT, () => {
+    console.log(`🚀 Proxy server running on port ${PORT}`);
+});
 
 // Enable CORS
 app.use(cors());
