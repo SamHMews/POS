@@ -40,6 +40,10 @@ app.post('/search-customer', async (req, res) => {
         res.status(500).json({ error: "Failed to fetch data" });
     }
 });
+// ✅ Test Route to check if proxy is running
+app.get('/test', (req, res) => {
+    res.json({ message: "Test route works!" });
+});
 
 // ✅ Start the server
 app.listen(PORT, () => console.log(`🚀 Proxy server running on port ${PORT}`));
