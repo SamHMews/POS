@@ -1,0 +1,17 @@
+{
+  "name": "pos-proxy",
+  "version": "1.0.0",
+  "description": "Proxy server for Mews API",
+  "main": "proxy.js",
+  "scripts": {
+    "start": "node proxy.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "node-fetch": "^2.6.7"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}
