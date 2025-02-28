@@ -40,35 +40,39 @@ async function searchCustomer() {
     console.log("searchCustomer() function called!");
 
     const name = document.getElementById('accountID').value;
+    const accountFound = document.getElementById('accountFound'); // Ensure this exists
+
     if (!name) {
-        alert("Please enter a customer name.");
+        alert("Please enter an account name.");
         return;
     }
 
     console.log("Fetching customer details for:", name);
 
     try {
-        const response = await fetch("https://pos-proxy.onrender.com/search-customer", { // Replace with your actual Render URL
+        const response = await fetch("https://pos-proxy.onrender.com/search-customer", { // Replace with your Render URL
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ name })
         });
 
-        if (!response.ok) {
-            throw new Error(`HTTP Error! Status: ${response.status}`);
-        }
-
         const data = await response.json();
         console.log("Customer search response:", data);
 
+        // Ensure the element exists before updating it
+        if (!accountFound) {
+            console.error("Error: 'accountFound' element not found in index.html.");
+            return;
+        }
+
         if (data.Customers && data.Customers.length > 0) {
             customerId = data.Customers[0].Id;
-            document.getElementById('customerInfo').innerText = `Customer Found: ${data.Customers[0].FirstName} ${data.Customers[0].LastName} (ID: ${customerId})`;
+            accountFound.innerText = `Account Found: ${data.Customers[0].FirstName} ${data.Customers[0].LastName} (ID: ${customerId})`;
             console.log("Customer found:", data.Customers[0]);
         } else {
             customerId = null;
-            document.getElementById('customerInfo').innerText = "No customer found";
-            console.log("No customer found.");
+            accountFound.innerText = "No account found";
+            console.log("No account found.");
         }
     } catch (error) {
         console.error("Error in searchCustomer():", error);
