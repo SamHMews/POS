@@ -5,12 +5,19 @@ const fetch = require('node-fetch');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Enable CORS for all routes
+// Enable CORS
 app.use(cors());
 app.use(express.json());
 
-// Customer Search Endpoint
+// ✅ Root Route (for testing)
+app.get('/', (req, res) => {
+    res.send('✅ POS Proxy Server is Running');
+});
+
+// ✅ Customer Search API Proxy
 app.post('/search-customer', async (req, res) => {
+    console.log("🔍 Received request to /search-customer");
+
     try {
         const response = await fetch('https://api.mews-demo.com/api/connector/v1/customers/search', {
             method: "POST",
@@ -26,17 +33,13 @@ app.post('/search-customer', async (req, res) => {
         });
 
         const data = await response.json();
+        console.log("✅ Customer search response:", data);
         res.json(data);
     } catch (error) {
-        console.error("Error in proxy:", error);
+        console.error("❌ Error in /search-customer:", error);
         res.status(500).json({ error: "Failed to fetch data" });
     }
 });
 
-// Root Endpoint (for testing)
-app.get('/', (req, res) => {
-    res.send('POS Proxy Server is Running');
-});
-
-// Start server
-app.listen(PORT, () => console.log(`Proxy server running on port ${PORT}`));
+// ✅ Start the server
+app.listen(PORT, () => console.log(`🚀 Proxy server running on port ${PORT}`));
