@@ -1,6 +1,6 @@
 const express = require('express');
 const cors = require('cors');
-const fetch = require('node-fetch'); 
+const fetch = require('node-fetch');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -9,6 +9,7 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
+// Customer Search Endpoint
 app.post('/search-customer', async (req, res) => {
     try {
         const response = await fetch('https://api.mews-demo.com/api/connector/v1/customers/search', {
@@ -30,6 +31,11 @@ app.post('/search-customer', async (req, res) => {
         console.error("Error in proxy:", error);
         res.status(500).json({ error: "Failed to fetch data" });
     }
+});
+
+// Root Endpoint (for testing)
+app.get('/', (req, res) => {
+    res.send('POS Proxy Server is Running');
 });
 
 // Start server
