@@ -49,7 +49,7 @@ async function searchCustomer() {
     console.log("Fetching customer details for:", name);
 
     try {
-        const response = await fetch(API_BASE_URL + "/customers/search", {
+        const response = await fetch("https://api.mews-demo.com/api/connector/v1/customers/search", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -84,6 +84,7 @@ async function searchCustomer() {
         console.error("Error in searchCustomer():", error);
     }
 }
+
 
 // Update item quantities
 function updateQuantity(item, delta) {
