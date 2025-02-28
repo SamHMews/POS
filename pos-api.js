@@ -10,6 +10,8 @@ const API_CONFIG = {
 };
 
 let customerId = null;
+let order = {}; // Store selected menu items
+
 const productIds = {
     "English Breakfast Tea": "735463cc-f81c-4e55-911e-b28f00d86ef8",
     "Fresh Orange Juice": "484c50ae-877b-4088-ad3d-b28f00d81595",
@@ -29,69 +31,103 @@ const productIds = {
     "Pan-Seared Salmon": "db005797-3128-44c8-a9a9-b28f00d711fa"
 };
 
+console.log("pos-api.js is loaded!");
+
+// Customer Search
 async function searchCustomer() {
+    console.log("searchCustomer() function called!");
+    
     const name = document.getElementById('accountID').value;
     if (!name) {
         alert("Please enter a customer name.");
         return;
     }
-    
-    const response = await fetch(proxyUrl + API_BASE_URL + "/customers/search", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-            ClientToken: API_CONFIG.clientToken,
-            AccessToken: API_CONFIG.accessToken,
-            Client: API_CONFIG.client,
-            Name: name,
-            ResourceId: null,
-            Extent: { Customers: true }
-        })
-    });
-    
-    const data = await response.json();
-    if (data.Customers && data.Customers.length > 0) {
-        customerId = data.Customers[0].Id;
-        document.getElementById('customerInfo').innerText = `Customer Found: ${data.Customers[0].FirstName} ${data.Customers[0].LastName} (ID: ${customerId})`;
-    } else {
-        customerId = null;
-        document.getElementById('customerInfo').innerText = "No customer found";
+
+    console.log("Fetching customer details for:", name);
+
+    try {
+        const response = await fetch(proxyUrl + API_BASE_URL + "/customers/search", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                ClientToken: API_CONFIG.clientToken,
+                AccessToken: API_CONFIG.accessToken,
+                Client: API_CONFIG.client,
+                Name: name,
+                ResourceId: null,
+                Extent: { Customers: true }
+            })
+        });
+
+        const data = await response.json();
+        console.log("Customer search response:", data);
+
+        if (data.Customers && data.Customers.length > 0) {
+            customerId = data.Customers[0].Id;
+            document.getElementById('customerInfo').innerText = `Customer Found: ${data.Customers[0].FirstName} ${data.Customers[0].LastName} (ID: ${customerId})`;
+        } else {
+            customerId = null;
+            document.getElementById('customerInfo').innerText = "No customer found";
+        }
+    } catch (error) {
+        console.error("Error in searchCustomer():", error);
     }
 }
 
+// Update item quantities
+function updateQuantity(item, delta) {
+    order[item] = (order[item] || 0) + delta;
+    if (order[item] < 0) order[item] = 0;
+    document.getElementById(`qty-${item}`).innerText = order[item];
+    console.log("Updated order:", order);
+}
+
+// Submit Order
 async function submitOrder() {
+    console.log("submitOrder() function called!");
+
     if (!customerId) {
         alert("Please search for a customer before placing an order.");
         return;
     }
-    
+
+    console.log("Preparing order for Customer ID:", customerId);
+
     const productOrders = Object.entries(order)
         .filter(([_, count]) => count > 0)
         .map(([itemName, count]) => {
-            const productId = productIds[itemName];
-            return productId ? { ProductId: productId, Count: count } : null;
-        }).filter(order => order !== null);
+            return { ProductId: productIds[itemName], Count: count };
+        })
+        .filter(order => order !== null);
 
     if (productOrders.length === 0) {
         alert("No items selected.");
         return;
     }
-    
-    const response = await fetch(proxyUrl + API_BASE_URL + "/orders/add", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-            ClientToken: API_CONFIG.clientToken,
-            AccessToken: API_CONFIG.accessToken,
-            Client: API_CONFIG.client,
-            EnterpriseId: API_CONFIG.enterpriseId,
-            AccountId: customerId,
-            ServiceId: API_CONFIG.serviceId,
-            ConsumptionUtc: new Date().toISOString().split('T')[0] + "T00:00:00Z",
-            ProductOrders: productOrders
-        })
-    });
-    
-    const result = await response.json();
-    alert("Order placed successfully!");
+
+    console.log("Sending order:", productOrders);
+
+    try {
+        const response = await fetch(proxyUrl + API_BASE_URL + "/orders/add", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                ClientToken: API_CONFIG.clientToken,
+                AccessToken: API_CONFIG.accessToken,
+                Client: API_CONFIG.client,
+                EnterpriseId: API_CONFIG.enterpriseId,
+                AccountId: customerId,
+                ServiceId: API_CONFIG.serviceId,
+                ConsumptionUtc: new Date().toISOString().split('T')[0] + "T00:00:00Z",
+                ProductOrders: productOrders
+            })
+        });
+
+        const result = await response.json();
+        console.log("Order response:", result);
+        alert("Order placed successfully!");
+
+    } catch (error) {
+        console.error("Error in submitOrder():", error);
+    }
 }
