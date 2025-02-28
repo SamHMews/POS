@@ -1,4 +1,4 @@
-const proxyUrl = "https://cors-anywhere.herokuapp.com/";
+const proxyUrl = "https://pos-proxy.onrender.com";
 const API_BASE_URL = "https://api.mews-demo.com/api/connector/v1";
 
 const API_CONFIG = {
@@ -37,7 +37,7 @@ console.log("pos-api.js is loaded!");
 
 // Customer Search
 async function searchCustomer() {
-    console.log("searchCustomer() function called!");
+    console.log("🔍 searchCustomer() function called!");
 
     const name = document.getElementById('accountID').value;
     const accountFound = document.getElementById('accountFound');
@@ -50,7 +50,7 @@ async function searchCustomer() {
     console.log("Fetching customer details for:", name);
 
     try {
-        const response = await fetch("https://pos-proxy.onrender.com/search-customer", {
+        const response = await fetch(`${proxyUrl}/search-customer`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ name })
@@ -67,14 +67,14 @@ async function searchCustomer() {
         if (data.Customers && data.Customers.length > 0) {
             customerId = data.Customers[0].Id;
             accountFound.innerText = `Account Found: ${data.Customers[0].FirstName} ${data.Customers[0].LastName} (ID: ${customerId})`;
-            console.log("Customer found:", data.Customers[0]);
+            console.log("✅ Customer found:", data.Customers[0]);
         } else {
             customerId = null;
             accountFound.innerText = "No account found";
-            console.log("No account found.");
+            console.log("⚠️ No account found.");
         }
     } catch (error) {
-        console.error("Error in searchCustomer():", error);
+        console.error("❌ Error in searchCustomer():", error);
     }
 }
 
@@ -90,7 +90,6 @@ function updateQuantity(item, delta) {
 function placeOrder() {
     console.log("🛒 Placing order...");
 
-    // Get selected items
     const orderItems = [];
     document.querySelectorAll(".qty-display").forEach((qtyElement) => {
         const quantity = parseInt(qtyElement.innerText);
@@ -100,7 +99,6 @@ function placeOrder() {
         }
     });
 
-    // Check if there are items in the order
     if (orderItems.length === 0) {
         console.warn("⚠️ No items selected. Order not placed.");
         alert("Please select at least one item.");
@@ -109,24 +107,12 @@ function placeOrder() {
 
     console.log("📦 Order Summary:", orderItems);
 
-    // Simulate API call (Real API will be added later)
-    alert("✅ Order placed successfully (Not yet connected to API)");
+    submitOrder();
 }
 
-// Link function to the "Place Order" button (Index 33)
-document.addEventListener("DOMContentLoaded", function () {
-    const placeOrderButton = document.querySelectorAll("button")[33];
-    if (placeOrderButton) {
-        placeOrderButton.addEventListener("click", placeOrder);
-        console.log("✅ 'Place Order' button event listener added!");
-    } else {
-        console.error("❌ 'Place Order' button not found.");
-    }
-});
-
-// Submit Order (Future API Integration)
+// Submit Order to Mews API
 async function submitOrder() {
-    console.log("submitOrder() function called!");
+    console.log("🚀 Sending order to Mews API...");
 
     if (!customerId) {
         alert("Please search for a customer before placing an order.");
@@ -137,20 +123,21 @@ async function submitOrder() {
 
     const productOrders = Object.entries(order)
         .filter(([_, count]) => count > 0)
-        .map(([itemName, count]) => {
-            return { ProductId: productIds[itemName], Count: count };
-        })
-        .filter(order => order !== null);
+        .map(([itemName, count]) => ({
+            ProductId: productIds[itemName], 
+            Count: count
+        }))
+        .filter(order => order.ProductId !== undefined);
 
     if (productOrders.length === 0) {
         alert("No items selected.");
         return;
     }
 
-    console.log("Sending order:", productOrders);
+    console.log("🛒 Order Data to Send:", productOrders);
 
     try {
-        const response = await fetch(proxyUrl + API_BASE_URL + "/orders/add", {
+        const response = await fetch(`${proxyUrl}/place-order`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -166,10 +153,28 @@ async function submitOrder() {
         });
 
         const result = await response.json();
-        console.log("Order response:", result);
-        alert("Order placed successfully!");
+        console.log("✅ Order API Response:", result);
+
+        if (result.Error) {
+            alert("❌ Order failed: " + result.Error);
+        } else {
+            alert("✅ Order placed successfully!");
+        }
 
     } catch (error) {
-        console.error("Error in submitOrder():", error);
+        console.error("❌ Error in submitOrder():", error);
+        alert("❌ Order failed. Check Console for details.");
     }
 }
+
+// Attach event listener after DOM loads
+document.addEventListener("DOMContentLoaded", () => {
+    const placeOrderButton = document.querySelectorAll("button")[33];
+
+    if (placeOrderButton) {
+        placeOrderButton.addEventListener("click", placeOrder);
+        console.log("✅ Place Order button found and event listener attached.");
+    } else {
+        console.warn("⚠️ Place Order button not found! Check the index.");
+    }
+});
