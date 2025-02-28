@@ -3,44 +3,25 @@ const cors = require('cors');
 const fetch = require('node-fetch');
 
 const app = express();
-const PORT = process.env.PORT || 3000; // ✅ Use dynamic port
+const PORT = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(express.json());
 
+// ✅ Root Route for Testing
 app.get('/', (req, res) => {
     res.send('✅ POS Proxy Server is Running');
 });
 
-app.listen(PORT, () => {
-    console.log(`🚀 Proxy server running on port ${PORT}`);
-});
-
-// Enable CORS
-app.use(cors());
-app.use(express.json());
-
-// ✅ Root Route (for testing)
-app.get('/', (req, res) => {
-    res.send('✅ POS Proxy Server is Running');
-});
-
-// ✅ Customer Search API Proxy
+// ✅ Customer Search Route
 app.post('/search-customer', async (req, res) => {
-    console.log("🔍 Received request to /search-customer");
+    console.log("🔍 Received request to /search-customer", req.body);
 
     try {
         const response = await fetch('https://api.mews-demo.com/api/connector/v1/customers/search', {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                ClientToken: "E0D439EE522F44368DC78E1BFB03710C-D24FB11DBE31D4621C4817E028D9E1D",
-                AccessToken: "381F1DD27E44487699BAB27400AAF224-3FC59278EBB61547F7A4A5DB4587E16",
-                Client: "Sample Client 1.0.0",
-                Name: req.body.name,
-                ResourceId: null,
-                Extent: { Customers: true, Documents: false, Addresses: false }
-            })
+            body: JSON.stringify(req.body)
         });
 
         const data = await response.json();
@@ -51,8 +32,10 @@ app.post('/search-customer', async (req, res) => {
         res.status(500).json({ error: "Failed to fetch data" });
     }
 });
+
+// ✅ Order Placement Route
 app.post('/place-order', async (req, res) => {
-    console.log("🛒 Received request to /place-order");
+    console.log("🛒 Received request to /place-order", req.body);
 
     try {
         const response = await fetch('https://api.mews-demo.com/api/connector/v1/orders/add', {
@@ -70,12 +53,5 @@ app.post('/place-order', async (req, res) => {
     }
 });
 
-// ✅ Test Route to check if proxy is running
-app.get('/test', (req, res) => {
-    res.json({ message: "Test route works!" });
-});
-
 // ✅ Start the server
 app.listen(PORT, () => console.log(`🚀 Proxy server running on port ${PORT}`));
-app.listen(PORT, () => console.log(`🚀 Proxy server running on port ${PORT}. Listening for requests...`));
-
