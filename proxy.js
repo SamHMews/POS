@@ -43,3 +43,5 @@ app.post('/search-customer', async (req, res) => {
 
 // ✅ Start the server
 app.listen(PORT, () => console.log(`🚀 Proxy server running on port ${PORT}`));
+app.listen(PORT, () => console.log(`🚀 Proxy server running on port ${PORT}. Listening for requests...`));
+
