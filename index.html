@@ -16,10 +16,14 @@
 <body class="bg-gray-100 p-8">
     <div class="max-w-5xl mx-auto bg-white p-8 shadow-lg rounded-lg">
         <h1 class="text-3xl font-bold text-center mb-6">Bristol City Restaurant POS</h1>
-        <input id="accountID" class="w-full p-3 border rounded mb-6" placeholder="Enter Account ID">
-        <button onclick="searchAccount()" class="w-full bg-blue-500 text-white p-3 rounded">Search</button>
+
+        <!-- Updated Search Input & Button -->
+        <input id="accountID" class="w-full p-3 border rounded mb-6" placeholder="Enter Customer Name">
+        <button onclick="searchCustomer()" class="w-full bg-blue-500 text-white p-3 rounded">Search</button>
+
+        <!-- Updated Account Found Display -->
         <p id="accountFound" class="text-center mt-6 text-gray-700"></p>
-        
+
         <h2 class="text-2xl font-semibold mt-8">Menu</h2>
         <div id="menuItems" class="mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10"></div>
         
@@ -57,12 +61,6 @@
                 ]
             }
         };
-        
-        
-        function searchAccount() {
-            const accountID = document.getElementById('accountID').value;
-            document.getElementById('accountFound').innerText = accountID ? `Account Found: ${accountID}` : '';
-        }
 
         function updateQuantity(item, delta) {
             order[item] = (order[item] || 0) + delta;
@@ -105,6 +103,8 @@
         
         document.addEventListener('DOMContentLoaded', loadMenu);
     </script>
+
+    <!-- Load External JS -->
     <script src="pos-api.js"></script>
 
 </body>
