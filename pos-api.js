@@ -114,7 +114,15 @@ function placeOrder() {
 }
 
 // Link function to the "Place Order" button (Index 33)
-document.querySelectorAll("button")[33].addEventListener("click", placeOrder);
+document.addEventListener("DOMContentLoaded", function () {
+    const placeOrderButton = document.querySelectorAll("button")[33];
+    if (placeOrderButton) {
+        placeOrderButton.addEventListener("click", placeOrder);
+        console.log("✅ 'Place Order' button event listener added!");
+    } else {
+        console.error("❌ 'Place Order' button not found.");
+    }
+});
 
 // Submit Order (Future API Integration)
 async function submitOrder() {
