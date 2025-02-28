@@ -10,7 +10,9 @@ const API_CONFIG = {
 };
 
 let customerId = null;
-let order = {}; // Store selected menu items
+if (typeof order === "undefined") {
+    var order = {}; // Ensure 'order' is only declared once
+}
 
 const productIds = {
     "English Breakfast Tea": "735463cc-f81c-4e55-911e-b28f00d86ef8",
