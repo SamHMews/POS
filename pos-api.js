@@ -40,7 +40,7 @@ async function searchCustomer() {
     console.log("searchCustomer() function called!");
 
     const name = document.getElementById('accountID').value;
-    const accountFound = document.getElementById('accountFound'); // Ensure this exists
+    const accountFound = document.getElementById('accountFound');
 
     if (!name) {
         alert("Please enter an account name.");
@@ -50,7 +50,7 @@ async function searchCustomer() {
     console.log("Fetching customer details for:", name);
 
     try {
-        const response = await fetch("https://pos-proxy.onrender.com/search-customer", { // Replace with your Render URL
+        const response = await fetch("https://pos-proxy.onrender.com/search-customer", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ name })
@@ -59,7 +59,6 @@ async function searchCustomer() {
         const data = await response.json();
         console.log("Customer search response:", data);
 
-        // Ensure the element exists before updating it
         if (!accountFound) {
             console.error("Error: 'accountFound' element not found in index.html.");
             return;
@@ -87,7 +86,37 @@ function updateQuantity(item, delta) {
     console.log("Updated order:", order);
 }
 
-// Submit Order
+// Place Order Function
+function placeOrder() {
+    console.log("🛒 Placing order...");
+
+    // Get selected items
+    const orderItems = [];
+    document.querySelectorAll(".qty-display").forEach((qtyElement) => {
+        const quantity = parseInt(qtyElement.innerText);
+        if (quantity > 0) {
+            const itemName = qtyElement.id.replace("qty-", "");
+            orderItems.push({ name: itemName, quantity });
+        }
+    });
+
+    // Check if there are items in the order
+    if (orderItems.length === 0) {
+        console.warn("⚠️ No items selected. Order not placed.");
+        alert("Please select at least one item.");
+        return;
+    }
+
+    console.log("📦 Order Summary:", orderItems);
+
+    // Simulate API call (Real API will be added later)
+    alert("✅ Order placed successfully (Not yet connected to API)");
+}
+
+// Link function to the "Place Order" button (Index 33)
+document.querySelectorAll("button")[33].addEventListener("click", placeOrder);
+
+// Submit Order (Future API Integration)
 async function submitOrder() {
     console.log("submitOrder() function called!");
 
